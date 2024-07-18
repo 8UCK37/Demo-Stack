@@ -1,0 +1,81 @@
+{
+  "name": "passport-steam",
+  "version": "1.0.17",
+  "description": "Steam (OpenID 2) authentication strategy for PassportJS.",
+  "author": {
+    "name": "Liam Curry",
+    "email": "liam@curry.name",
+    "url": "http://www.liamcurry.com/"
+  },
+  "contributors": [
+    {
+      "name": "Toby Archer",
+      "email": "toby@nerdping.com",
+      "url": "http://github.com/mnzt"
+    },
+    {
+      "name": "Welps",
+      "url": "https://github.com/welps"
+    }
+  ],
+  "ava": {
+    "failFast": true,
+    "verbose": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/liamcurry/passport-steam.git"
+  },
+  "bugs": {
+    "url": "http://github.com/liamcurry/passport-steam/issues"
+  },
+  "main": "./lib/passport-steam",
+  "dependencies": {
+    "@google-cloud/storage": "^6.9.3",
+    "@passport-next/passport-openid": "^1.0.0",
+    "@prisma/client": "^4.9.0",
+    "axios": "^1.2.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "firebase-admin": "^11.5.0",
+    "log4js": "^6.9.1",
+    "multer": "^1.4.5-lts.1",
+    "passport-discord": "^0.1.4",
+    "passport-twitch": "^1.0.3",
+    "passport-twitchtv": "^0.1.4",
+    "socket.io": "^4.5.4",
+    "steam-web": "0.4.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "ava": "^0.10.0",
+    "ejs": "^2.4.2",
+    "express": "^4.14.0",
+    "express-session": "^1.13.0",
+    "passport": "^0.3.2",
+    "prisma": "^4.10.1"
+  },
+  "scripts": {
+    "start": "nodemon  ./examples/signon/app.js",
+    "test": "ava test/*.test.js",
+    "example": "node examples/signon/app.js",
+    "example-router": "node examples/signon/app-router.js"
+  },
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "keywords": [
+    "passport",
+    "steam",
+    "auth",
+    "authn",
+    "authentication",
+    "identity"
+  ]
+}

@@ -1,0 +1,5 @@
+.DS_Store
+.sftp
+node_modules
+public/profilePicture
+prisma/dev.db
