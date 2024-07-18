@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "672847406453",
+    "project_id": "weather-app-graphe",
+    "storage_bucket": "weather-app-graphe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672847406453:android:03cd9330346fdf588c1f3c",
+        "android_client_info": {
+          "package_name": "com.example.graphedemo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr2Eg7LOwIgqyMqqsC4oU3P4Q7DK1cGlw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
