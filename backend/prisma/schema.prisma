@@ -21,6 +21,7 @@ model UserInfo {
   createdAt        DateTime @default(now())
   Gender           String?
   Country          String?
+  bio              String?
   User             User?
   Address          String?
 }
