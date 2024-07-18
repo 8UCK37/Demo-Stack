@@ -27,6 +27,7 @@ class AuthService {
       //debugPrint(userCredential.user.toString());
       dataService.updateUser(userCredential.user);
       // Navigate to the HomeScreenWidget
+      dataService.saveUserInit();
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
         context,
@@ -92,9 +93,9 @@ class AuthService {
   Future<void> signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
-     // ignore: use_build_context_synchronously
-     final dataService = Provider.of<DataService>(context, listen: false);
-     dataService.updateUser(null);
+    // ignore: use_build_context_synchronously
+    final dataService = Provider.of<DataService>(context, listen: false);
+    dataService.updateUser(null);
     // Navigate to the SignInScreen or any other screen you want
     // ignore: use_build_context_synchronously
     Navigator.push(

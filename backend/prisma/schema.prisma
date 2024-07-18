@@ -11,6 +11,7 @@ model User {
   id              String            @id
   createdAt       DateTime          @default(now())
   name            String
+  gmailId         String?
   profilePicture  String?
   userInfoId      Int?              @unique
   userInfo        UserInfo?         @relation(fields: [userInfoId], references: [id])

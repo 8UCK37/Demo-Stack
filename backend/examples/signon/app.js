@@ -68,11 +68,10 @@ app.post('/saveuser', ensureAuthenticated, async function (req, res) {
     // console.log("user not found ")
     const userInfo = await prisma.userInfo.create({
       data: {
-        Gender: null, 
         Country: null, 
-        Language: null, 
         Address: null,
         bio:null,
+        Phone:null
       },
     });
     

@@ -83,27 +83,28 @@ class _HomePageState extends State<HomePage> {
           alignment: const AlignmentDirectional(0, -1),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top:18.0),
-                child: CircleAvatar(
-                    maxRadius: 100,
-                    child: ClipOval(
-                      child: FadeInImage.assetNetwork(
-                        imageScale: .4,
-                        placeholder: 'assets/images/profile.png',
-                        image: dataService.user == null
-                            ? ''
-                            : dataService.user.photoURL,
-                        fit: BoxFit.fill,
-                        imageErrorBuilder: (context, error, stackTrace) {
-                          return Image.asset('assets/images/profile.png',
-                              fit: BoxFit.cover);
-                        },
-                      ),
-                    ),
-                  ),
-              ),
-              Text(dataService.user.displayName),
+              // Padding(
+              //   padding: const EdgeInsets.only(top:18.0),
+              //   child: 
+              //   CircleAvatar(
+              //       maxRadius: 100,
+              //       child: ClipOval(
+              //         child: FadeInImage.assetNetwork(
+              //           imageScale: .4,
+              //           placeholder: 'assets/images/profile.png',
+              //           image: dataService.currentUser == null
+              //               ? ''
+              //               : dataService.user.photoURL,
+              //           fit: BoxFit.fill,
+              //           imageErrorBuilder: (context, error, stackTrace) {
+              //             return Image.asset('assets/images/profile.png',
+              //                 fit: BoxFit.cover);
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              // ),
+              // Text(dataService.user.displayName),
               Text("Bio"),
               Text("Country"),
               Text("Address"),
