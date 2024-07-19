@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:graphedemo/pages/notes.dart';
 import 'package:graphedemo/pages/profilepage.dart';
 import 'package:graphedemo/services/auth_service.dart';
 import 'package:graphedemo/services/data_service.dart';
@@ -60,10 +61,49 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               Text(
                 userData['name'] ?? 'person doe',
                 style: const TextStyle(
-                    fontSize: 24.0, fontWeight: FontWeight.bold),
+                    fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               Padding(
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.fromLTRB(25.0,150,18,18),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            const Notes(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.easeInOut;
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+                          var offsetAnimation = animation.drive(tween);
+                          return SlideTransition(
+                            position: offsetAnimation,
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.notes_outlined),
+                      SizedBox(width: 15),
+                      Text(
+                        'Notes',
+                        style: TextStyle(
+                            fontSize: 14.0, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(25.0,50,18,18),
                 child: GestureDetector(
                   onTap: () {
                     AuthService().signOut(context);
@@ -81,7 +121,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ],

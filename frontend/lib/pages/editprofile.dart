@@ -317,7 +317,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         child: SliderDrawer(
           appBar: const SliderAppBar(
               appBarColor: Colors.white,
-              title: Text("CRUD Demo",
+              title: Text("Edit Profile",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
           slider:const DrawerWidget(),
           child: Stack(children: [
@@ -777,15 +777,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                       ],
                     ),
                     Column(children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Divider(
-                          color: Colors.black,
-                          height: 7,
-                          indent: 8,
-                          endIndent: 8,
-                        ),
-                      ),
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

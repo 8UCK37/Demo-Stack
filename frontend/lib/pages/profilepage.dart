@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
           //key: _key,
           appBar: const SliderAppBar(
               appBarColor: Colors.white,
-              title: Text("CRUD Demo",
+              title: Text("Profile",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
           slider: const DrawerWidget(),
           child: Column(
