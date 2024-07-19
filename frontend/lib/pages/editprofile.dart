@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
-import 'package:graphedemo/services/auth_service.dart';
+import 'package:graphedemo/utils/drawer.dart';
 import 'package:graphedemo/utils/profile_image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +24,6 @@ class EditProfileInfo extends StatefulWidget {
 }
 
 class _EditProfileInfoState extends State<EditProfileInfo> {
-
   bool cancelVisibilityBanner = true;
   bool cancelVisibilityAvatar = true;
 
@@ -61,8 +60,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   NetworkController networkController = NetworkController();
   @override
   void initState() {
-    super.initState();
     bioInitHandler();
+    super.initState();
   }
 
   @override
@@ -124,7 +123,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         'Authorization': 'Bearer $idToken',
       },
     );
-    var response = await dio.post(
+    var response = await dio.put(
       'http://${dotenv.env['server_url']}/userNameUpdate',
       data: {'name': namePlaceholder},
       options: options,
@@ -152,15 +151,15 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         'Authorization': 'Bearer $idToken',
       },
     );
-    var response = await dio.post(
+    var response = await dio.put(
       'http://${dotenv.env['server_url']}/updateUserData',
       data: {
         'data': {
           'id': dataService.currentUser['userInfo']['id'],
-          'bio':bioPlaceholder,
+          'bio': bioPlaceholder,
           'Address': addressPlaceholder,
           'Country': countryPlaceholder,
-          'Phone':phonePlaceholder
+          'Phone': phonePlaceholder
         }
       },
       options: options,
@@ -176,14 +175,14 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     //debugPrint(userData['userInfo']['Gender'].toString());
     nameHint = userData['name'];
     namePlaceholder = userData['name'];
-    bioHint = userData['userInfo']['bio'] ?? 'Add a bio';
-    bioPlaceholder = userData['userInfo']['bio'] ?? '';
-    countryHint = userData['userInfo']['Country'] ?? 'Add your Country';
-    countryPlaceholder = userData['userInfo']['Country'] ?? '';
-    addressHint = userData['userInfo']['Address'] ?? 'Add your Address';
-    addressPlaceholder = userData['userInfo']['Address'] ?? '';
-    phoneHint = userData['userInfo']['Phone'] ?? 'Add your Phone no';
-    phonePlaceholder = userData['userInfo']['Phone'] ?? '';
+    bioHint = userData['userInfo']?['bio'] ?? 'Add a bio';
+    bioPlaceholder = userData['userInfo']?['bio'] ?? '';
+    countryHint = userData['userInfo']?['Country'] ?? 'Add your Country';
+    countryPlaceholder = userData['userInfo']?['Country'] ?? '';
+    addressHint = userData['userInfo']?['Address'] ?? 'Add your Address';
+    addressPlaceholder = userData['userInfo']?['Address'] ?? '';
+    phoneHint = userData['userInfo']?['Phone'] ?? 'Add your Phone no';
+    phonePlaceholder = userData['userInfo']?['Phone'] ?? '';
   }
 
   void uploadBanner() async {
@@ -219,6 +218,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         });
         // ignore: use_build_context_synchronously
         final dataService = Provider.of<DataService>(context, listen: false);
+        dataService.refreshCache();
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
       }
@@ -262,6 +262,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
 
         // ignore: use_build_context_synchronously
         final dataService = Provider.of<DataService>(context, listen: false);
+        dataService.refreshCache();
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
       }
@@ -318,52 +319,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
               appBarColor: Colors.white,
               title: Text("CRUD Demo",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
-          slider: Container(
-            color: const Color.fromARGB(255, 235, 213, 212),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 50),
-                  child: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                        cacheKey: dataService.profileImagecacheKey,
-                        userData['profilePicture'] ?? ''),
-                    radius: 50.0,
-                  ),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      userData['name'] ?? 'person doe',
-                      style: const TextStyle(
-                          fontSize: 24.0, fontWeight: FontWeight.bold),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          AuthService().signOut(context);
-                        },
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.logout_rounded),
-                            SizedBox(width: 15),
-                            Text(
-                              'LogOut',
-                              style: TextStyle(
-                                  fontSize: 14.0, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
+          slider:const DrawerWidget(),
           child: Stack(children: [
             SingleChildScrollView(
               child: Padding(
@@ -389,7 +345,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   )
                                 : DecorationImage(
                                     image: CachedNetworkImageProvider(
-                                        cacheKey: dataService.bannerImagecacheKey,
+                                        cacheKey:
+                                            dataService.bannerImagecacheKey,
                                         userData['profileBanner'] ?? ''),
                                     fit: BoxFit.cover,
                                   ),
@@ -408,8 +365,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           ),
                         ),
                         Visibility(
-                          visible:
-                              selectedBannerPath != null && cancelVisibilityBanner,
+                          visible: selectedBannerPath != null &&
+                              cancelVisibilityBanner,
                           child: GestureDetector(
                             onTap: () {
                               debugPrint("deselect banner");
@@ -446,14 +403,14 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           child: GestureDetector(
                             onTap: () async {
                               debugPrint("goto crop");
-          
+
                               if (selectedProfilePicPath != null) {
                                 var editedImage = await Navigator.push(
                                   context,
                                   PageRouteBuilder(
-                                    pageBuilder:
-                                        (context, animation, secondaryAnimation) =>
-                                            CropperScreen(
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        CropperScreen(
                                       imagePath: selectedProfilePicPath!,
                                     ),
                                     transitionsBuilder: (context, animation,
@@ -461,12 +418,13 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                       const begin = Offset(0.0, 1.0);
                                       const end = Offset.zero;
                                       const curve = Curves.easeInOut;
-          
+
                                       var tween = Tween(begin: begin, end: end)
                                           .chain(CurveTween(curve: curve));
-          
-                                      var offsetAnimation = animation.drive(tween);
-          
+
+                                      var offsetAnimation =
+                                          animation.drive(tween);
+
                                       return SlideTransition(
                                         position: offsetAnimation,
                                         child: child,
@@ -504,7 +462,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 5.0, top: 150),
+                                padding:
+                                    const EdgeInsets.only(left: 5.0, top: 150),
                                 child: selectedProfilePicPath != null
                                     ? CircleAvatar(
                                         backgroundImage: FileImage(
@@ -512,25 +471,32 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                         radius: 50.0,
                                       )
                                     : CircleAvatar(
-                                        backgroundImage: CachedNetworkImageProvider(
-                                            cacheKey: dataService.profileImagecacheKey,
-                                            userData['profilePicture'] ?? ''),
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(
+                                                cacheKey: dataService
+                                                    .profileImagecacheKey,
+                                                userData['profilePicture'] ??
+                                                    ''),
                                         radius: 50.0,
                                       ),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 200, left: 10),
+                              padding:
+                                  const EdgeInsets.only(top: 200, left: 10),
                               // ignore: sized_box_for_whitespace
                               child: Container(
                                 //decoration: BoxDecoration(border: Border.all(color: Colors.green)),
                                 width: MediaQuery.of(context).size.width - 120,
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
                                             namePlaceholder.isEmpty
@@ -545,7 +511,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                                 : bioPlaceholder,
                                             softWrap: true,
                                             style: const TextStyle(
-                                                fontSize: 15.0,
+                                                fontSize: 20.0,
                                                 fontWeight: FontWeight.normal))
                                       ],
                                     ),
@@ -610,8 +576,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   hintStyle: const TextStyle(
                                       fontSize: 15, color: Colors.black),
                                   border: const OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8)))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8)))),
                             ),
                           ),
                         ],
@@ -670,8 +636,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   hintStyle: const TextStyle(
                                       fontSize: 15, color: Colors.black),
                                   border: const OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8)))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8)))),
                             ),
                           ),
                         ],
@@ -730,8 +696,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   hintStyle: const TextStyle(
                                       fontSize: 15, color: Colors.black),
                                   border: const OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8)))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8)))),
                             ),
                           ),
                         ],
@@ -790,25 +756,25 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   hintStyle: const TextStyle(
                                       fontSize: 15, color: Colors.black),
                                   border: const OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8)))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8)))),
                             ),
                           ),
                         ],
                       ),
                     ]),
-                    const Column(children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 23.0),
-                        child: Divider(
-                          color: Colors.black,
-                          height: 7,
-                          indent: 8,
-                          endIndent: 8,
+                    const Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 23.0),
+                          child: Divider(
+                            color: Colors.black,
+                            height: 7,
+                            indent: 8,
+                            endIndent: 8,
+                          ),
                         ),
-                      ),
-                  
-                    ],
+                      ],
                     ),
                     Column(children: [
                       const Padding(
@@ -863,8 +829,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   hintStyle: const TextStyle(
                                       fontSize: 15, color: Colors.black),
                                   border: const OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8)))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8)))),
                             ),
                           ),
                         ],
@@ -877,8 +843,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
             // Blurry overlay when isLoading is true
             if (isLoading)
               Container(
-                color:
-                    Colors.black.withOpacity(0.5), // Adjust the opacity as needed
+                color: Colors.black
+                    .withOpacity(0.5), // Adjust the opacity as needed
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
                       sigmaX: 5, sigmaY: 5), // Adjust the blur amount

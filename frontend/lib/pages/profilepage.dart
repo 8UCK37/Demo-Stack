@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:graphedemo/pages/editprofile.dart';
-import 'package:graphedemo/services/auth_service.dart';
 import 'package:graphedemo/services/data_service.dart';
+import 'package:graphedemo/utils/drawer.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -14,7 +15,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   @override
   void initState() {
     fetchUser();
@@ -30,6 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final dataService = Provider.of<DataService>(context, listen: false);
     dataService.saveUserInit();
   }
+
   @override
   Widget build(BuildContext context) {
     final dataService = Provider.of<DataService>(context, listen: true);
@@ -42,52 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
               appBarColor: Colors.white,
               title: Text("CRUD Demo",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
-          slider: Container(
-            color: const Color.fromARGB(255, 235, 213, 212),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 50),
-                  child: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                        cacheKey: dataService.profileImagecacheKey,
-                        userData['profilePicture'] ?? ''),
-                    radius: 50.0,
-                  ),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      userData['name'] ?? 'person doe',
-                      style: const TextStyle(
-                          fontSize: 24.0, fontWeight: FontWeight.bold),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          AuthService().signOut(context);
-                        },
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.logout_rounded),
-                            SizedBox(width: 15),
-                            Text(
-                              'LogOut',
-                              style: TextStyle(
-                                  fontSize: 14.0, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
+          slider: const DrawerWidget(),
           child: Column(
             children: <Widget>[
               Stack(
@@ -120,7 +76,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: CircleAvatar(
                             backgroundImage: CachedNetworkImageProvider(
                                 cacheKey: dataService.profileImagecacheKey,
-                                userData['profilePicture'] ?? ''),
+                                userData['profilePicture'] ??
+                                    '${dotenv.env['backup_profile']}'),
                             radius: 50.0,
                           ),
                         ),
@@ -142,10 +99,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       style: const TextStyle(
                                           fontSize: 24.0,
                                           fontWeight: FontWeight.bold)),
-                                  Text(userData['userInfo']['bio'] ?? 'No Bio Given',
+                                  Text(
+                                      userData['userInfo']?['bio'] ??
+                                          'No Bio Given',
                                       softWrap: true,
                                       style: const TextStyle(
-                                          fontSize: 15.0,
+                                          fontSize: 20.0,
                                           fontWeight: FontWeight.normal))
                                 ],
                               ),
@@ -162,35 +121,93 @@ class _ProfilePageState extends State<ProfilePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Column(
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: <Widget>[
                             Image.asset(
                               "assets/images/location.png",
-                              scale: 3.5,
+                              scale: 2,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                              child: Text(
-                                  userData['userInfo']?['Country'] ??
-                                      'No Info Given',
-                                  style: const TextStyle(fontSize: 16.0)),
-                            )
+                              child: RichText(
+                                text: TextSpan(
+                                    style: const TextStyle(
+                                        fontSize: 26.0, color: Colors.black),
+                                    children: [
+                                      const TextSpan(
+                                        text: "Country:      ",
+                                      ),
+                                      TextSpan(
+                                        text: userData['userInfo']
+                                                ?['Country'] ??
+                                            'No Info Given',
+                                      ),
+                                    ]),
+                              ),
+                            ),
                           ],
                         ),
-                        const SizedBox(width: 15.0),
+                        const SizedBox(height: 15.0),
+                        Row(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/home.png",
+                              scale: 2,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              child: RichText(
+                                text: TextSpan(
+                                    style: const TextStyle(
+                                        fontSize: 26.0, color: Colors.black),
+                                    children: [
+                                      const TextSpan(
+                                        text: "Address:      ",
+                                      ),
+                                      TextSpan(
+                                        text: userData['userInfo']
+                                                ?['Address'] ??
+                                            'No Info Given',
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 15.0),
+                        Row(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/phone.png",
+                              scale: 2,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              child: RichText(
+                                text: TextSpan(
+                                    style: const TextStyle(
+                                        fontSize: 26.0, color: Colors.black),
+                                    children: [
+                                      const TextSpan(
+                                        text: "Phone No:   ",
+                                      ),
+                                      TextSpan(
+                                        text: userData['userInfo']?['Phone'] ??
+                                            'No Info Given',
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                     const SizedBox(height: 15.0),
                     GestureDetector(
                       onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => const EditProfileInfo()),
-                        // );
                         Navigator.push(
                           context,
                           PageRouteBuilder(
@@ -242,8 +259,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
-              const Divider(thickness: 1.0, height: 15),
-              const Divider(height: 45.0),
             ],
           ),
         ),

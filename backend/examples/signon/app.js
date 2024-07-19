@@ -52,8 +52,8 @@
  app.use(bodyParser.json());
  
  //saves a new user #endpoint
- app.post('/saveuser', ensureAuthenticated, async function (req, res) {
-   console.log("/saveuser called")
+ app.get('/saveuser', ensureAuthenticated, async function (req, res) {
+   console.log("/saveuser called"+req.user)
    const fetchUser = await prisma.User.findUnique({
      where: {
        id: req.user.user_id
@@ -75,19 +75,14 @@
      const newUser = await prisma.User.create({
        data: {
          id: req.user.user_id,
-         name: req.user.name,
-         profilePicture: req.user.picture,
+         name: req.user.name?? req.user.email,
+         profilePicture: req.user.picture?? 'https://firebasestorage.googleapis.com/v0/b/weather-app-graphe.appspot.com/o/ProfilePicture%2Fprofile.png?alt=media&token=761d6b73-d744-4476-99d8-022778158daf',
          profileBanner: 'https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg',
          gmailId: req.user.email,
          userInfoId: userInfo.id,
        },
      })
      
-     const newUserAcc = await prisma.LinkedAccounts.create({
-       data: {
-         userId: req.user.user_id,
-       },
-     })
      console.log("new user created db updated", newUser)
      // res.statusCode = 201
      res.send(JSON.stringify(newUser))
@@ -116,7 +111,7 @@
    res.sendStatus(200)
  })
  //updates displayname of the user #endpoint
- app.post('/userNameUpdate', ensureAuthenticated, urlencodedParser, async (req, res) => {
+ app.put('/userNameUpdate', ensureAuthenticated, urlencodedParser, async (req, res) => {
    console.log("283"+req.body.name);
    const updateUserName = await prisma.User.update({
      where: {
@@ -154,7 +149,7 @@
  });
 
  //#endpoint
- app.post("/updateUserData", ensureAuthenticated, async (req, res) => {
+ app.put("/updateUserData", ensureAuthenticated, async (req, res) => {
   console.log("linw 158:"+req.body.data)
    const updateStatus = await prisma.userInfo.update({
      where: {
