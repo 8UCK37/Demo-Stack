@@ -7,6 +7,7 @@ import 'package:graphedemo/utils/drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+
 class Notes extends StatefulWidget {
   const Notes({super.key});
 
@@ -47,7 +48,7 @@ class _NotesState extends State<Notes> {
                 Navigator.of(context).pop();
               });
             },
-            child: Text(docId!=null? "Edit":"Add"),
+            child: Text(docId != null ? "Edit" : "Add"),
           ),
         ],
       ),
@@ -92,7 +93,7 @@ class _NotesState extends State<Notes> {
             child: StreamBuilder<QuerySnapshot>(
               stream: firestoreService.getNotesStream(userData['id']),
               builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                if (snapshot.hasData && snapshot.data!.docs.length != 0) {
                   List notesList = snapshot.data!.docs;
                   return ListView.builder(
                     itemCount: notesList.length,
@@ -104,7 +105,8 @@ class _NotesState extends State<Notes> {
                           document.data() as Map<String, dynamic>;
                       String noteText = data['note'];
                       Timestamp timestamp = data['timestamp'];
-                      String timeStamp = "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}";
+                      String timeStamp =
+                          "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}";
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
                         child: Container(
@@ -116,11 +118,11 @@ class _NotesState extends State<Notes> {
                             title: Text("CreatedAt: ${timeStamp}"),
                             subtitle: Text(
                               noteText,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 20,
-                                ),
                               ),
+                            ),
                             trailing: SizedBox(
                               width: 75,
                               child: Row(
@@ -134,14 +136,17 @@ class _NotesState extends State<Notes> {
                                       child: const Icon(Icons.edit)),
                                   GestureDetector(
                                     onTap: () {
-                                      firestoreService.deleteNote(docId);
-                                      QuickAlert.show(
+                                      firestoreService.deleteNote(docId);               
+                                      if (notesList.length > 1) {
+                                        QuickAlert.show(
                                           context: context,
                                           type: QuickAlertType.success,
                                           text: 'Deleted !!!',
                                           showConfirmBtn: false,
-                                          autoCloseDuration: const Duration(
-                                              milliseconds: 700));
+                                          autoCloseDuration:
+                                              const Duration(milliseconds: 700),
+                                        );
+                                      }
                                     },
                                     child: const Icon(
                                       Icons.delete,
