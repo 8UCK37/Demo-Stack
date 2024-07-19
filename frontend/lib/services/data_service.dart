@@ -11,13 +11,24 @@ class DataService extends ChangeNotifier {
   NetworkController networkController = NetworkController();
   WeatherDataPojo? data;
   var user;
+
+  String profileImagecacheKey = "dp1";
+  String bannerImagecacheKey = "ban1";
+
   Map<String, dynamic> currentUser = {};
+
   void updateUser(var newUser) {
     user = newUser;
     //debugPrint(user.displayName);
     notifyListeners();
   }
 
+  void refreashCache() {
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    profileImagecacheKey = "dp2$timestamp";
+    bannerImagecacheKey = "ban2$timestamp";
+    notifyListeners();
+  }
 
   void saveUserInit() async {
     NetworkController networkController = NetworkController();
@@ -52,6 +63,7 @@ class DataService extends ChangeNotifier {
         //debugPrint(userData.toString());
         currentUser = userData;
         notifyListeners();
+        refreashCache();
       } else {
         // Request failed
         debugPrint('Failed to hit Express backend endpoint');

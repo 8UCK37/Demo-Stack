@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:graphedemo/firebase_options.dart';
-import 'package:graphedemo/pages/homepage.dart';
 import 'package:graphedemo/pages/loginpage.dart';
+import 'package:graphedemo/pages/profilepage.dart';
 import 'package:graphedemo/services/data_service.dart';
 import 'package:provider/provider.dart';
 import 'dependency_injection.dart';
@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.deepPurple,
           useMaterial3: true,
         ),
-        home: isLogin ? const HomePage() : const LoginPage(),
+        home: isLogin ? const ProfilePage() : const LoginPage(),
         navigatorKey: GlobalVariable.navState,
       ),
     );

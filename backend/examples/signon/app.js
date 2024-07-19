@@ -10,7 +10,7 @@
  var express = require('express')
    , session = require('express-session')
  require("dotenv").config()
-
+ let profileHelper = require('./profileHelper')
  var bodyParser = require('body-parser')
  // create application/x-www-form-urlencoded parser
  var urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -98,28 +98,8 @@
    }
  
  });
- //returns user info #endpoint
- app.post('/getUserInfo', ensureAuthenticated, async (req, res) => {
-     //console.log("/getUserInfo called",req.body)
-     try{
-       let userData = await prisma.User.findMany({
-         where: {
-           id: req.body.id
-         },
-         include: {
-           userInfo:true,
-         }
-       })
-       //console.log(userData)
-       res.send(userData);
-     }
-     catch(e){
-       console.log(e)
-       res.sendStatus(400)
-     }
- });
- 
- 
+
+
  app.post("/saveUserInfo" , ensureAuthenticated , async (req , res)=>{
  
   let userData = await prisma.User.update({
@@ -156,15 +136,12 @@
    res.send("works");
  });
  
- 
+
  //selfexplanatory #endpoint
  app.get('/logout', function (req, res) {
    req.logout();
    res.redirect('/');
  });
- 
-
-
  
  app.post("/uploadProfile", ensureAuthenticated, upload.single('avatar'), (req, res) => {
    profileHelper.upProfilePic(req, res, prisma);
@@ -175,21 +152,10 @@
    profileHelper.upBanner(req, res, prisma);
    res.sendStatus(200);
  });
- //#endpoint
- app.post("/updateBio", ensureAuthenticated, async (req, res) => {
-   const updateStatus = await prisma.user.update({
-     where: {
-       id: req.user.user_id,
-     },
-     data: {
-       bio: req.body.bio,
-     },
-   })
-   res.sendStatus(200);
- });
- //#endpoint
 
+ //#endpoint
  app.post("/updateUserData", ensureAuthenticated, async (req, res) => {
+  console.log("linw 158:"+req.body.data)
    const updateStatus = await prisma.userInfo.update({
      where: {
        id: req.body.data.id,

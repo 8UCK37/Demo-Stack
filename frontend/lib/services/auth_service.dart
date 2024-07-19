@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:graphedemo/pages/homepage.dart';
 import 'package:graphedemo/pages/loginpage.dart';
+import 'package:graphedemo/pages/profilepage.dart';
 import 'package:graphedemo/services/data_service.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +30,7 @@ class AuthService {
       Navigator.pushReplacement(
         context,
         // ignore: prefer_const_constructors
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => ProfilePage()),
       );
     }
   }
@@ -47,7 +47,7 @@ class AuthService {
         Navigator.pushReplacement(
           context,
           // ignore: prefer_const_constructors
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => ProfilePage()),
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -74,7 +74,7 @@ class AuthService {
         Navigator.pushReplacement(
           context,
           // ignore: prefer_const_constructors
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => ProfilePage()),
         );
       }
     } on FirebaseAuthException catch (e) {
