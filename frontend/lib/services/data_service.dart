@@ -49,7 +49,7 @@ class DataService extends ChangeNotifier {
       if (response.statusCode == 200) {
         // Request successful
         var userData = json.decode(response.data);
-        debugPrint(userData.toString());
+        //debugPrint(userData.toString());
         currentUser = userData;
         notifyListeners();
       } else {
@@ -62,6 +62,69 @@ class DataService extends ChangeNotifier {
     }
   }
   
+
+  Future<void> updateUserInfo(dynamic userInfo) async {
+    if (await networkController.noInternet()) {
+      debugPrint("updateSelectedLanguage() no_internet");
+      return;
+    } else {
+      debugPrint("updateSelectedLanguage() called");
+    }
+
+    Dio dio = Dio();
+    final userFromFirebase = FirebaseAuth.instance.currentUser;
+    final idToken = await userFromFirebase!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/updateUserData',
+      data: {
+        'data': {
+          'id': 2,
+          'bio': "userInfo['bio']",
+          'Address': "userInfo['Address']",
+          'Country': "userInfo['Country']",
+          'Phone':"userInfo['Phone']"
+        }
+      },
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("userinfo updated");
+    }
+  }
+
+  Future<void> updateName(String newName) async {
+    if (await networkController.noInternet()) {
+      debugPrint("updateSelectedLanguage() no_internet");
+      return;
+    } else {
+      debugPrint("updateSelectedLanguage() called");
+    }
+    debugPrint("----------------------------\n\n");
+    debugPrint(newName);
+    Dio dio = Dio();
+
+    final userFromFirebase = FirebaseAuth.instance.currentUser;
+    final idToken = await userFromFirebase!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/userNameUpdate',
+      data: {'name': newName},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("name updated");
+    }
+  }
+
   void fetchWeatherData(String searchTerm) async {
     if (await networkController.noInternet()) {
       debugPrint("no_internet");

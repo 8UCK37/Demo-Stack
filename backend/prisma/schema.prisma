@@ -13,6 +13,7 @@ model User {
   name            String
   gmailId         String?
   profilePicture  String?
+  profileBanner   String?
   userInfoId      Int?              @unique
   userInfo        UserInfo?         @relation(fields: [userInfoId], references: [id])
 }

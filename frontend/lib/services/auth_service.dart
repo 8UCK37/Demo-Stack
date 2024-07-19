@@ -21,13 +21,11 @@ class AuthService {
         await FirebaseAuth.instance.signInWithCredential(credential);
 
     // ignore: use_build_context_synchronously
-    final dataService = Provider.of<DataService>(context, listen: false);
     // Check if the user is successfully signed in
     if (userCredential.user != null) {
       //debugPrint(userCredential.user.toString());
-      dataService.updateUser(userCredential.user);
-      // Navigate to the HomeScreenWidget
-      dataService.saveUserInit();
+      //dataService.updateUser(userCredential.user);
+
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
         context,
