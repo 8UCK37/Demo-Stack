@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:graphedemo/services/data_service.dart';
@@ -59,6 +60,7 @@ class _NotesState extends State<Notes> {
   Widget build(BuildContext context) {
     final dataService = Provider.of<DataService>(context, listen: true);
     final userData = dataService.currentUser;
+    final userFromSignin=FirebaseAuth.instance.currentUser;
     return Scaffold(
       floatingActionButton: GestureDetector(
         onTap: () {
@@ -91,7 +93,7 @@ class _NotesState extends State<Notes> {
           child: Container(
             height: double.infinity,
             child: StreamBuilder<QuerySnapshot>(
-              stream: firestoreService.getNotesStream(userData['id']),
+              stream: firestoreService.getNotesStream(userData['id']??userFromSignin?.uid),
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.data!.docs.length != 0) {
                   List notesList = snapshot.data!.docs;
