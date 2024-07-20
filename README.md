@@ -17,6 +17,11 @@ flutter run
 UserData is stored in PostgreSQl and user notes are stored in Firestore
 
 The notes page contains notes of the user which is managed by firestore
+•to access the notes go to drawer=>notes 
+•the notes page functions without running the backend server as it only uses firestore and the notes are fetched by id of the current-user
+
+•However the Profile and edit profile page depends on the backend server as it is not
+  recommended to directly do CRUD on a SQL a DB from frontend
 
 All the necessary CRUD methods are contained within the services/firestore_service.dart file
 
