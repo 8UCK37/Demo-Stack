@@ -8,6 +8,7 @@ backend setup complete
 
 • Instruction to run the flutter app
 cd into forntend(cd frontend)
+dave your local machines's ip address in the server_url:${localip}:3000
 flutter run
 if error=> first check if env is ok by running flutter doctor
 then flutter clean
